@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Telegram Bot</title>
+    <link rel="stylesheet" href="./css/telegram.css" />
+</head>
+<body>
+    <header class="header">
+        <h1>Social Media Parser</h1>
+        <div class="header-links">
+          <a href="#tools">Tools</a>
+          <a href="#documentation">Documentation</a>
+          <a href="#help">Help</a>
+        </div>
+      </header>
+    <h1>Telegram Bot</h1>
+    
+
+    <div class="login-form">
+        <h2>Telegram Login</h2>
+        <button onclick="startTelegramBot()">Start Telegram Bot</button>
+    </div>
+
+    <div id="qrCodeContainer" style="display: none;">
+        <h3>Scan QR Code</h3>
+        <img id="qrCodeImage" src="" alt="QR Code">
+        <button onclick="hideQRCode()">Hide QR Code</button>
+    </div>
+
+    <div id="logs"></div>
+
+    <script>
+       
+    </script>
+
+    <script src="telegramBot.js"></script>
+</body>
+</html>

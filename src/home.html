@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Media Parser</title>
+   <link rel="stylesheet" href="./css/home.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Social Media Parser</h1>
+      <div class="header-links">
+        <a href="#tools">Tools</a>
+        <a href="#documentation">Documentation</a>
+        <a href="#help">Help</a>
+      </div>
+    </header>
+    <div class="container">
+      <div class="content-header">
+        <h2>Social Media Parser</h2>
+        <p>
+          Connect and analyze data from various social media platforms for
+          comprehensive digital investigations and forensic analysis.
+        </p>
+      </div>
+      <div class="cards-container">
+        <div class="card" style="flex: 1 1 100%;">
+          <div class="icon">
+            <img src="./static/folder.png" alt="Files" />
+            <h3>Files</h3>
+          </div>
+          <div class="content">
+            <p>
+              Access and analyze files from various sources. Extract valuable data for investigations.
+            </p>
+            <button class="button" id="filesCard">Explore</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <img
+              src="https://play-lh.googleusercontent.com/bYtqbOcTYOlgc6gqZ2rwb8lptHuwlNE75zYJu6Bn076-hTmvd96HH-6v7S0YUAAJXoJN=w480-h960-rw"
+              alt="WhatsApp"
+            />
+            <h3>WhatsApp</h3>
+          </div>
+          <div class="content">
+            <p>
+              Efficiently capture and document chats, call logs, and media from
+              WhatsApp accounts. Ensure accurate and secure extraction for
+              forensic analysis.
+            </p>
+            <button class="button whatsapp" id="whatsappCard">Connect</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <img
+              src="./static/instagram.png"
+              alt="Instagram"
+            />
+            <h3>Instagram</h3>
+          </div>
+          <div class="content">
+            <p>
+              Access and analyze Instagram profiles, posts, stories, and direct
+              messages. Extract valuable data for social media investigations.
+            </p>
+            <button class="button instagram" id="instagramCard">Connect</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <img
+              src="./static/facebook.png"
+              alt="Facebook"
+            />
+            <h3>Facebook</h3>
+          </div>
+          <div class="content">
+            <p>
+              Retrieve and examine Facebook profiles, timelines, friend lists,
+              and group activities. Gather crucial information for comprehensive
+              social media analysis.
+            </p>
+            <button class="button facebook" id="facebookCard">Connect</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <img
+              src="./static/twitter.png"
+              alt="Twitter"
+            />
+            <h3>Twitter</h3>
+          </div>
+          <div class="content">
+            <p>
+              Collect and analyze tweets, retweets, likes, and follower networks.
+              Extract valuable data for social media trend analysis and user
+              profiling.
+            </p>
+            <button class="button twitter" id="twitterCard">Connect</button>
+          </div>
+        </div>
+        <div class="card narrow">
+          <div class="icon">
+            <img
+              src="./static/google.png"
+              alt="Google"
+            />
+            <h3>Google</h3>
+          </div>
+          <div class="content">
+            <p>
+              Access Google services like Gmail, Google Drive, and Google Photos.
+              Gather and analyze user data for comprehensive digital
+              investigations.
+            </p>
+            <button class="button google" id="googleCard">Connect</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="icon">
+            <img
+              src="./static/telegram.png"
+              alt="Telegram"
+            />
+            <h3>Telegram</h3>
+          </div>
+          <div class="content">
+            <p>
+             Access Telegram services like posts,searches,and screenshots.
+             Gathers and analyses user data for comprehensive digital
+             investigations
+            </p>
+            <button class="button telegram" id="telegramCard">Connect</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+        document.getElementById("whatsappCard").addEventListener("click", () => {
+            window.location.href = "whatsapp.html";
+        });
+
+      document.getElementById("instagramCard").addEventListener("click", () => {
+        window.location.href = "instagram.html";
+      });
+
+      document.getElementById("facebookCard").addEventListener("click", () => {
+        window.location.href = "facebook.html";
+      });
+
+      document.getElementById("twitterCard").addEventListener("click", () => {
+        window.location.href = "twitter.html";
+      });
+
+      document.getElementById("googleCard").addEventListener("click", () => {
+        // Add your Google redirect logic here
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Facebook Bot</title>
+    <link rel="stylesheet" href="./css/facebook.css" />
+  </head>
+  <body>
+    <header class="header">
+      <h1>Social Media Parser</h1>
+      <div class="header-links">
+        <a href="#tools">Tools</a>
+        <a href="#documentation">Documentation</a>
+        <a href="#help">Help</a>
+      </div>
+    </header>
+    <h1>Facebook Bot</h1>
+    <form id="loginForm">
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required />
+      </div>
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+      </div>
+      <button type="submit" id="submitBtn">Start Bot</button>
+    </form>
+    <div id="result"></div>
+    <div id="logs"></div>
+    <script src="./scripts/facebook.js"></script>
+  </body>
+</html>

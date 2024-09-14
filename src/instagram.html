@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Instagram Bot</title>
+        <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+        
+        <link rel="stylesheet" href="./css/instagram.css" />
+</head>
+<body>
+    <header class="header">
+        <h1>Social Media Parser</h1>
+        <div class="header-links">
+            <a href="#tools">Tools</a>
+            <a href="#documentation">Documentation</a>
+            <a href="#help">Help</a>
+        </div>
+    </header>
+    <div id="container">
+        <div class="card">
+            <a href="./home.html" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
+            <h1>Instagram Bot</h1>
+            <form id="loginForm">
+                <div class="form-group">
+                    <input type="text" id="username" name="username" placeholder="" required />
+                    <label for="username">Username</label>
+                </div>
+                <div class="form-group">
+                    <input type="password" id="password" name="password" placeholder=" " required />
+                    <label for="password">Password</label>
+                </div>
+                <button type="submit" id="submitBtn">Start Bot</button>
+            </form>
+            <div id="result"></div>
+            <div id="logs"></div>
+        </div>
+    </div>
+
+    <!-- 2FA Modal -->
+    <div id="twoFactorModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Enter 2FA Code</h2>
+            <input type="text" id="two-factor-code" placeholder="Enter 2FA Code" />
+            <button id="submit-2fa-code">Submit 2FA Code</button>
+        </div>
+    </div>
+
+    <script>
+        const { ipcRenderer } = require('electron');
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const submitButton = document.getElementById("submitBtn");
+            submitButton.disabled = true;
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                const result = await ipcRenderer.invoke("start-instagram-bot", {
+                    username,
+                    password,
+                });
+
+                if (result.success) {
+                    document.getElementById("result").innerText = "Bot process completed.";
+                    document.getElementById("loginForm").reset();
+                } else if (result.error && result.error.includes("2FA code required")) {
+                    document.getElementById('twoFactorModal').style.display = 'block';
+                } else {
+                    document.getElementById("result").innerText = "Error: " + result.error;
+                }
+            } catch (error) {
+                document.getElementById("result").innerText = "Unexpected error: " + error.message;
+            }
+
+            submitButton.disabled = false;
+        });
+
+        ipcRenderer.on("update-logs", (event, log) => {
+            const logsDiv = document.getElementById("logs");
+            const logElement = document.createElement("p");
+            logElement.innerText = log;
+            logsDiv.appendChild(logElement);
+            logsDiv.scrollTop = logsDiv.scrollHeight;
+        });
+
+        ipcRenderer.on('show-2fa-input', () => {
+            document.getElementById('twoFactorModal').style.display = 'block';
+        });
+
+        document.getElementById('submit-2fa-code').addEventListener('click', () => {
+            const code = document.getElementById('two-factor-code').value;
+            ipcRenderer.send('submit-2fa-code', code);
+            document.getElementById('twoFactorModal').style.display = 'none';
+        });
+
+        // Close modal when clicking on the close button
+        document.querySelector('.close').addEventListener('click', () => {
+            document.getElementById('twoFactorModal').style.display = 'none';
+        });
+
+        // Close modal when clicking outside of the modal content
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        };
+    </script>
+</body>
+</html>
