@@ -4,11 +4,12 @@ const fs = require("fs").promises;
 const path = require("path");
 
 class InstagramBot {
-  constructor(username, password, sendLog, waitForTwoFactorCodei) {
+  constructor(username, password, sendLog, waitForTwoFactorCodei, email) {
     this.username = username;
     this.password = password;
     this.sendLog = sendLog;
     this.waitForTwoFactorCodei = waitForTwoFactorCodei;
+    this.email = email;
   }
 
   async init() {
@@ -22,19 +23,31 @@ class InstagramBot {
     await this.page.goto("https://www.instagram.com/accounts/login/", {
       waitUntil: "networkidle2",
     });
-
+  
     await this.page.type('input[name="username"]', this.username, {
       delay: 100,
     });
     await this.page.type('input[name="password"]', this.password, {
       delay: 100,
     });
+    
+    this.sendLog("Submitting login credentials...");
     await this.page.click('button[type="submit"]');
-
-    await this.page
-      .waitForNavigation({ waitUntil: "networkidle2" })
-      .catch(() => {});
-
+  
+    // Wait for either navigation or error message
+    await Promise.race([
+      this.page.waitForNavigation({ waitUntil: "networkidle2" }),
+      this.page.waitForSelector('span[class*="x1lliihq"] div._ab2z', { visible: true, timeout: 5000 })
+    ]).catch(() => {});
+  
+    // Check for error message
+    const errorElement = await this.page.$('span[class*="x1lliihq"] div._ab2z');
+    if (errorElement) {
+      const errorText = await this.page.evaluate(el => el.textContent, errorElement);
+      this.sendLog(`Login failed: ${errorText}`);
+      throw new Error(`Login failed: ${errorText}`);
+    }
+  
     if (this.page.url().includes("two_factor")) {
       this.sendLog("2FA page detected.");
       const code = await this.waitForTwoFactorCodei();
@@ -43,11 +56,11 @@ class InstagramBot {
       });
       await this.page.click('button[type="button"]');
       await this.page.waitForNavigation({ waitUntil: "networkidle2" });
-
+  
       this.sendLog("2FA code entered and submitted.");
     }
-
-    if (this.page.url().includes("instagram.com")) {
+  
+    if (this.page.url().includes("instagram.com") && !this.page.url().includes("accounts/login")) {
       this.sendLog("Logged in successfully.");
     } else {
       throw new Error("Login failed or unexpected page loaded.");
@@ -64,14 +77,15 @@ class InstagramBot {
 
   async takeProfileScreenshot() {
     this.sendLog("Taking profile screenshot...");
-
-    const profileDir = path.join(__dirname, "files", "instagram", this.username);
+  
+    // Use the stored email to define the directory
+    const profileDir = path.join(__dirname, "..", "..", "files", this.email, "instagram", this.username);
     await fs.mkdir(profileDir, { recursive: true });
-
+  
     await this.page.evaluate(() => window.scrollTo(0, 0));
     const profileHeaderSelector = "header";
     const profileHeader = await this.page.$(profileHeaderSelector);
-
+  
     if (profileHeader) {
       const profileScreenshotPath = path.join(
         profileDir,
@@ -87,11 +101,12 @@ class InstagramBot {
       this.sendLog("Failed to capture profile header.");
     }
   }
+  
 
   async takePostsScreenshot() {
     this.sendLog("Taking posts screenshot...");
 
-    const postsDir = path.join(__dirname, "files", "instagram", this.username);
+    const postsDir = path.join(__dirname, "..", "..", "files", this.email, "instagram", this.username);
     await fs.mkdir(postsDir, { recursive: true });
 
     await this.page.evaluate(() => {
@@ -153,7 +168,7 @@ class InstagramBot {
   async takeConversationScreenshots() {
     this.sendLog("Taking conversation screenshots...");
 
-    const messagesDir = path.join(__dirname, "files", "instagram", this.username);
+    const messagesDir = path.join(__dirname, "..", "..", "files", this.email, "instagram", this.username);
     await fs.mkdir(messagesDir, { recursive: true });
 
     // Take a screenshot of the list of conversations
@@ -203,16 +218,21 @@ class InstagramBot {
   }
 
   async run() {
-    await this.init();
-    this.sendLog("Instagram Bot initialized.");
-    await this.login();
-    await this.navigateToOwnProfile();
-    await this.takeProfileScreenshot();
-    await this.takePostsScreenshot();
-    await this.navigateToMessages();
-    await this.takeConversationScreenshots();
-    await this.close();
-    this.sendLog("Instagram Bot process completed.");
+    try {
+      await this.init();
+      this.sendLog("Instagram Bot initialized.");
+      await this.login();
+      await this.navigateToOwnProfile();
+      await this.takeProfileScreenshot();
+      await this.takePostsScreenshot();
+      await this.navigateToMessages();
+      await this.takeConversationScreenshots();
+      this.sendLog("Instagram Bot process completed.");
+    } catch (error) {
+      this.sendLog(`Error: ${error.message}`);
+    } finally {
+      await this.close();
+    }
   }
 }
 
