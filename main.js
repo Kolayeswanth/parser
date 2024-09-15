@@ -5,8 +5,11 @@ const FacebookBot = require("./src/bots/facebookBot");
 const TwitterBot = require("./src/bots/twitterBot");
 const WhatsAppBot = require("./src/bots/whatsappBot");
 const TelegramBot = require("./src/bots/telegramBot");
+const { supabase } = require('./supabaseClient');
+const fs = require("fs").promises;
 
 let mainWindow;
+let userEmail;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -19,7 +22,7 @@ function createWindow() {
     },
   });
 
-  mainWindow.loadFile("./src/home.html").catch((err) => {
+  mainWindow.loadFile("index.html").catch((err) => {
     console.error("Failed to load index.html:", err);
   });
 
@@ -63,7 +66,8 @@ ipcMain.handle(
         username,
         password,
         sendLog,
-        waitForTwoFactorCodei
+        waitForTwoFactorCodei,
+        userEmail
       );
       await bot.run();
       return { success: true };
@@ -142,7 +146,6 @@ ipcMain.handle("start-whatsapp-bot", async () => {
   }
 });
 
-// Telegram bot handler, properly structured
 ipcMain.handle("start-telegram-bot", async (_event, { phoneNumber, password }) => {
   const sendLog = (message) => {
     mainWindow.webContents.send("update-logs", message);
@@ -158,6 +161,133 @@ ipcMain.handle("start-telegram-bot", async (_event, { phoneNumber, password }) =
     return { success: false, error: error.message };
   }
 });
+
+
+ipcMain.handle('login-user', async (_event, { email, password }) => {
+  try {
+    // First, query the users table to get the user with the provided email
+    const { data: users, error: queryError } = await supabase
+      .from('users')
+      .select('*')
+      .eq('email', email)
+      .single();
+
+    if (queryError) {
+      throw new Error('Error querying user');
+    }
+
+    if (!users) {
+      throw new Error('User not found');
+    }
+
+    // Check if the provided password matches the stored password
+    if (users.password !== password) {
+      throw new Error('Invalid credentials');
+    }
+    
+    // If login is successful, create user folder and store email
+    userEmail = email;
+    await createUserFolder(email);
+    
+    return { success: true, user: { id: users.id, email: users.email } };
+  } catch (error) {
+    console.error('Login error:', error);
+    return { success: false, error: error.message };
+  }
+});
+
+async function getFileDetails(filePath) {
+  const stats = await fs.stat(filePath);
+  return {
+    name: path.basename(filePath),
+    isDirectory: stats.isDirectory(),
+    size: stats.size,
+    modifiedDate: stats.mtime
+  };
+}
+
+async function createUserFolder(email) {
+  const userFolderPath = path.join(process.cwd(), 'files', email);
+
+  try {
+    await fs.access(userFolderPath);
+    console.log(`Folder already exists: ${userFolderPath}`);
+  } catch {
+    try {
+      await fs.mkdir(userFolderPath, { recursive: true });
+      console.log(`Created folder for user: ${userFolderPath}`);
+    } catch (error) {
+      console.error(`Error creating user folder: ${error}`);
+    }
+  }
+}
+
+async function exploreDirectory(directoryPath) {
+  if (!userEmail) {
+    throw new Error('User not logged in');
+  }
+
+  const baseDir = path.join(process.cwd(), 'files', userEmail);
+  const fullPath = path.join(baseDir, directoryPath);
+
+  console.log('Exploring directory:', fullPath);
+
+  const files = await fs.readdir(fullPath);
+
+  const fileDetails = await Promise.all(files.map(async (file) => {
+    const filePath = path.join(fullPath, file);
+    const details = await getFileDetails(filePath);
+    if (details.isDirectory) {
+      details.children = await exploreDirectory(path.join(directoryPath, file))
+        .then(result => result.files)
+        .catch(() => []);
+    }
+    return details;
+  }));
+
+  return {
+    currentPath: directoryPath,
+    files: fileDetails
+  };
+}
+
+ipcMain.handle('open-image', async (event, imagePath) => {
+  try {
+    const baseDir = path.join(process.cwd(), 'files', userEmail);
+    const fullPath = path.join(baseDir, imagePath);
+
+    console.log('Attempting to open image:', fullPath);
+
+    // Check if the file exists
+    await fs.access(fullPath);
+
+    const imageWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      webPreferences: {
+        nodeIntegration: false,
+        contextIsolation: true,
+      }
+    });
+
+    await imageWindow.loadFile(fullPath);
+
+    return { success: true };
+  } catch (error) {
+    console.error('Error opening image:', error);
+    return { error: error.message };
+  }
+});
+
+ipcMain.handle('explore-directory', async (event, directoryPath) => {
+  try {
+    return await exploreDirectory(directoryPath);
+  } catch (error) {
+    console.error('Error exploring directory:', error);
+    return { error: error.message };
+  }
+});
+
 
 app.whenReady().then(() => {
   createWindow();

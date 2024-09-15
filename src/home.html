@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Social Media Parser</title>
-   <link rel="stylesheet" href="./css/home.css" />
+    <link rel="stylesheet" href="./css/home.css" />
   </head>
   <body>
     <header class="header">
@@ -24,14 +24,15 @@
         </p>
       </div>
       <div class="cards-container">
-        <div class="card" style="flex: 1 1 100%;">
+        <div class="card" style="flex: 1 1 100%">
           <div class="icon">
             <img src="./static/folder.png" alt="Files" />
             <h3>Files</h3>
           </div>
           <div class="content">
             <p>
-              Access and analyze files from various sources. Extract valuable data for investigations.
+              Access and analyze files from various sources. Extract valuable
+              data for investigations.
             </p>
             <button class="button" id="filesCard">Explore</button>
           </div>
@@ -55,10 +56,7 @@
         </div>
         <div class="card">
           <div class="icon">
-            <img
-              src="./static/instagram.png"
-              alt="Instagram"
-            />
+            <img src="./static/instagram.png" alt="Instagram" />
             <h3>Instagram</h3>
           </div>
           <div class="content">
@@ -71,10 +69,7 @@
         </div>
         <div class="card">
           <div class="icon">
-            <img
-              src="./static/facebook.png"
-              alt="Facebook"
-            />
+            <img src="./static/facebook.png" alt="Facebook" />
             <h3>Facebook</h3>
           </div>
           <div class="content">
@@ -88,33 +83,27 @@
         </div>
         <div class="card">
           <div class="icon">
-            <img
-              src="./static/twitter.png"
-              alt="Twitter"
-            />
+            <img src="./static/twitter.png" alt="Twitter" />
             <h3>Twitter</h3>
           </div>
           <div class="content">
             <p>
-              Collect and analyze tweets, retweets, likes, and follower networks.
-              Extract valuable data for social media trend analysis and user
-              profiling.
+              Collect and analyze tweets, retweets, likes, and follower
+              networks. Extract valuable data for social media trend analysis
+              and user profiling.
             </p>
             <button class="button twitter" id="twitterCard">Connect</button>
           </div>
         </div>
         <div class="card narrow">
           <div class="icon">
-            <img
-              src="./static/google.png"
-              alt="Google"
-            />
+            <img src="./static/google.png" alt="Google" />
             <h3>Google</h3>
           </div>
           <div class="content">
             <p>
-              Access Google services like Gmail, Google Drive, and Google Photos.
-              Gather and analyze user data for comprehensive digital
+              Access Google services like Gmail, Google Drive, and Google
+              Photos. Gather and analyze user data for comprehensive digital
               investigations.
             </p>
             <button class="button google" id="googleCard">Connect</button>
@@ -122,17 +111,14 @@
         </div>
         <div class="card">
           <div class="icon">
-            <img
-              src="./static/telegram.png"
-              alt="Telegram"
-            />
+            <img src="./static/telegram.png" alt="Telegram" />
             <h3>Telegram</h3>
           </div>
           <div class="content">
             <p>
-             Access Telegram services like posts,searches,and screenshots.
-             Gathers and analyses user data for comprehensive digital
-             investigations
+              Access Telegram services like posts,searches,and screenshots.
+              Gathers and analyses user data for comprehensive digital
+              investigations
             </p>
             <button class="button telegram" id="telegramCard">Connect</button>
           </div>
@@ -141,9 +127,12 @@
     </div>
 
     <script>
-        document.getElementById("whatsappCard").addEventListener("click", () => {
-            window.location.href = "whatsapp.html";
-        });
+      document.getElementById("filesCard").addEventListener("click", () => {
+        window.location.href = "files.html"; // Redirect to the files page
+      });
+      document.getElementById("whatsappCard").addEventListener("click", () => {
+        window.location.href = "whatsapp.html";
+      });
 
       document.getElementById("instagramCard").addEventListener("click", () => {
         window.location.href = "instagram.html";
