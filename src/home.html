@@ -37,6 +37,18 @@
             <button class="button" id="filesCard">Explore</button>
           </div>
         </div>
+        <div class="card" style="flex: 1 1 100%">
+          <div class="icon">
+            <img src="./static/profile.png" alt="Search" />
+            <h3>Email Search</h3>
+          </div>
+          <div class="content">
+            <p>
+              Search and analyze emails for comprehensive digital investigations.
+            </p>
+            <button class="button" id="emailSearchCard">Search</button>
+          </div>
+        </div>
         <div class="card">
           <div class="icon">
             <img
@@ -129,6 +141,9 @@
     <script>
       document.getElementById("filesCard").addEventListener("click", () => {
         window.location.href = "files.html"; // Redirect to the files page
+      });
+      document.getElementById("emailSearchCard").addEventListener("click", () => {
+        window.location.href = "email_search.html"; // Redirect to the email search page
       });
       document.getElementById("whatsappCard").addEventListener("click", () => {
         window.location.href = "whatsapp.html";

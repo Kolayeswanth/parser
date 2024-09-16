@@ -7,6 +7,7 @@ const WhatsAppBot = require("./src/bots/whatsappBot");
 const TelegramBot = require("./src/bots/telegramBot");
 const { supabase } = require('./supabaseClient');
 const fs = require("fs").promises;
+const  EmailBot  = require("./src/bots/emailBot"); // Change this line
 
 let mainWindow;
 let userEmail;
@@ -53,6 +54,21 @@ function waitForTwoFactorCodei() {
     });
   });
 }
+ipcMain.handle("start-email-search", async (_event, { email }) => {
+  const sendLog = (message) => {
+    mainWindow.webContents.send("update-email-search-logs", message);
+  };
+
+  try {
+    const bot = new EmailBot(email, sendLog);
+    await bot.run();
+    return { success: true };
+  } catch (error) {
+    sendLog(`Error: ${error.message}`);
+    console.error("Error occurred in Email bot:", error);
+    return { success: false, error: error.message };
+  }
+});
 
 ipcMain.handle(
   "start-instagram-bot",
