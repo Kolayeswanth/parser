@@ -8,45 +8,40 @@ class EmailBot {
 
   async run() {
     this.sendLog("Starting Email Bot...");
-    await this.openBrowsersAndFillForms();
+    await this.openBrowserAndFillForms();
     this.sendLog("Email Bot process completed.");
   }
 
-  async openBrowsersAndFillForms() {
+  async openBrowserAndFillForms() {
+    let browser;
     try {
-      const browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
-      const [instagramPage, facebookPage, twitterPage] = await Promise.all([
-        browser.newPage(),
-        browser.newPage(),
-        browser.newPage()
-      ]);
+      // Launch a single browser
+      browser = await puppeteer.launch({ headless: true, args: ['--no-sandbox'] });
+      const page = await browser.newPage();
 
-      // Open Instagram, Facebook, and Twitter signup pages
-      await instagramPage.goto('https://www.instagram.com/accounts/emailsignup/?hl=en', { waitUntil: 'networkidle2' });
-      this.sendLog("Instagram Page loaded...");
-      await facebookPage.goto('https://www.facebook.com/login', { waitUntil: 'networkidle2' });
-      this.sendLog("Facebbok Page loaded...");
+      // Perform Instagram interaction
+      await this.fillInstagramForm(page);
 
-      await twitterPage.goto('https://twitter.com/i/flow/login', { waitUntil: 'networkidle2' });
-      this.sendLog("Twiiter Page loaded...");
+      // Perform Facebook interaction
+      await this.fillFacebookForm(page);
 
-    //   Instagram signup interaction
-      await this.fillInstagramForm(instagramPage);
+      // Perform Twitter interaction
+      await this.fillTwitterForm(page);
 
-      // Facebook signup interaction
-      await this.fillFacebookForm(facebookPage);
-
-      // Twitter signup interaction
-      await this.fillTwitterForm(twitterPage);
-
-      await browser.close();
     } catch (err) {
-      this.sendLog(`Error in opening browsers or interacting with forms: ${err.message}`);
+      this.sendLog(`Error in browser interaction: ${err.message}`);
+    } finally {
+      if (browser) {
+        await browser.close();
+      }
     }
   }
 
   async fillInstagramForm(page) {
     try {
+      await page.goto('https://www.instagram.com/accounts/emailsignup/?hl=en', { waitUntil: 'networkidle2' });
+      this.sendLog("Instagram Page loaded...");
+
       // Wait for the email input field to appear and fill it with the email
       await page.waitForSelector('input[name="emailOrPhone"]', { visible: true });
       await page.type('input[name="emailOrPhone"]', this.email);
@@ -69,6 +64,9 @@ class EmailBot {
 
   async fillFacebookForm(page) {
     try {
+      await page.goto('https://www.facebook.com/login', { waitUntil: 'networkidle2' });
+      this.sendLog("Facebook Page loaded...");
+
       // Wait for the email input field to appear and fill it with the email
       await page.waitForSelector('input#email', { visible: true });
       await page.type('input#email', this.email);
@@ -106,6 +104,9 @@ class EmailBot {
 
   async fillTwitterForm(page) { 
     try {
+      await page.goto('https://twitter.com/i/flow/login', { waitUntil: 'networkidle2' });
+      this.sendLog("Twitter Page loaded...");
+
       await page.waitForSelector('input[autocomplete="username"]', { visible: true, timeout: 60000 });
       await page.type('input[autocomplete="username"]', this.email, { delay: 50 });
 
@@ -114,7 +115,6 @@ class EmailBot {
 
       // Press Enter key
       await page.keyboard.press('Enter');
-
 
       // Check if the username input field is still present
       try {
@@ -129,9 +129,6 @@ class EmailBot {
       this.sendLog(`Error interacting with Twitter: ${err.message}`);
     }
   }
-
-  
-
 }
 
 module.exports = EmailBot;
