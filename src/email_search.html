@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Search - Social Media Parser</title>
+</head>
+<body>
+    <div class="header">
+        <h1>Social Media Parser</h1>
+        <div class="header-links">
+            <a href="#tools">Tools</a>
+            <a href="#documentation">Documentation</a>
+            <a href="#help">Help</a>
+        </div>
+    </div>
+
+    <div id="container">
+        <div class="card">
+            <a href="./home.html" class="back-arrow">←</a>
+            
+            <h1>Email Search</h1>
+            
+            <form id="emailSearchForm">
+                <div class="form-group">
+                    <input type="email" id="emailInput" placeholder=" " required>
+                    <label for="emailInput">Email Address</label>
+                </div>
+                <button type="submit" id="startEmailSearch">Start Search</button>
+            </form>
+            
+            <div id="emailSearchResult"></div>
+            <div id="emailSearchLogs"></div>
+        </div>
+    </div>
+
+    <script src="./scripts/email_search.js"></script>
+</body>
+</html>
