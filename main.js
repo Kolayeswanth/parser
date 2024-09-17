@@ -7,7 +7,7 @@ const WhatsAppBot = require("./src/bots/whatsappBot");
 const TelegramBot = require("./src/bots/telegramBot");
 const { supabase } = require('./supabaseClient');
 const fs = require("fs").promises;
-const  EmailBot  = require("./src/bots/emailBot"); // Change this line
+const EmailBot = require("./src/bots/emailBot"); // Change this line
 
 let mainWindow;
 let userEmail;
@@ -26,7 +26,6 @@ function createWindow() {
   mainWindow.loadFile("index.html").catch((err) => {
     console.error("Failed to load index.html:", err);
   });
-
 }
 
 function waitForVerificationInput(prompt) {
@@ -54,6 +53,7 @@ function waitForTwoFactorCodei() {
     });
   });
 }
+
 ipcMain.handle("start-email-search", async (_event, { email }) => {
   const sendLog = (message) => {
     mainWindow.webContents.send("update-email-search-logs", message);
@@ -162,22 +162,34 @@ ipcMain.handle("start-whatsapp-bot", async () => {
   }
 });
 
-ipcMain.handle("start-telegram-bot", async (_event, { phoneNumber, password }) => {
+ipcMain.handle("start-telegram-bot", async () => {
   const sendLog = (message) => {
     mainWindow.webContents.send("update-logs", message);
+  };
+
+  const waitForQRScan = (qrCodePath) => {
+    return new Promise((resolve) => {
+      ipcMain.once('qr-code-scanned', () => {
+        resolve();
+      });
+      mainWindow.webContents.send('show-qr-code', qrCodePath);
+      setTimeout(() => {
+        resolve();
+      }, 30000); // Add a 30-second timeout
+    });
   };
 
   try {
     const bot = new TelegramBot(sendLog, waitForQRScan);
     await bot.run();
-    return { success: true };
+    const qrCodePath = path.join(process.cwd(), 'public', 'files', 'telegram', 'qr_code.png');
+    return { success: true, qrCodePath: '/files/telegram/qr_code.png' };
   } catch (error) {
     sendLog(`Error: ${error.message}`);
     console.error("Error occurred in Telegram bot:", error);
     return { success: false, error: error.message };
   }
 });
-
 
 ipcMain.handle('login-user', async (_event, { email, password }) => {
   try {
@@ -303,7 +315,6 @@ ipcMain.handle('explore-directory', async (event, directoryPath) => {
     return { error: error.message };
   }
 });
-
 
 app.whenReady().then(() => {
   createWindow();

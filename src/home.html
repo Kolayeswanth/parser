@@ -4,11 +4,112 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Social Media Parser</title>
-    <link rel="stylesheet" href="./css/home.css" />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        font-family: Arial, sans-serif;
+        background-color: #f0f2f5;
+        background: url('https://i.ytimg.com/vi/0Seo8ve0QJU/maxresdefault.jpg');
+      }
+      .header {
+        background: linear-gradient(90deg, #4b6cb7 0%, #182848 100%);
+        color: white;
+        padding: 1rem 2rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      }
+      .header h1 {
+        font-size: 1.8rem;
+      }
+      .header-links a {
+        display: row;
+        color: white;
+        text-decoration: none;
+        margin-left: 1.5rem;
+        transition: color 0.3s ease;
+      }
+      .header-links a:hover {
+        color: #ffd700;
+      }
+      .container {
+        max-width: 1200px;
+        margin: 2rem auto;
+        padding: 0 1rem;
+      }
+      .content-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+      .content-header h2 {
+        font-size: 2.5rem;
+        color: whitesmoke;
+        margin-bottom: 1rem;
+      }
+      .content-header p {
+        color: lightblue;
+        font-size: 1.1rem;
+      }
+      .cards-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 4.5rem;
+      }
+      .card {
+        background-color: black;
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s ease;
+      }
+      .card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+      }
+      .icon {
+        padding: 1.5rem;
+        text-align: center;
+      }
+      .icon img {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
+      }
+      .icon h3 {
+        margin-top: 1rem;
+        color: white;
+      }
+      .content {
+        padding: 0 1.5rem 1.5rem;
+        text-align: center;
+      }
+      .content p {
+        color: bisque;
+        margin-bottom: 1rem;
+      }
+      .button {
+        background-color: #4b6cb7;
+        color: white;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+      }
+      .button:hover {
+        background-color: #182848;
+      }
+    </style>
   </head>
   <body>
     <header class="header">
       <h1>Social Media Parser</h1>
+      <img src="https://tse4.mm.bing.net/th?id=OIP.iHMvpeC2mQ429E-iN3Y0pwHaFo&pid=Api&P=0&h=180" alt="logo" width="100px" height="50px">
       <div class="header-links">
         <a href="#tools">Tools</a>
         <a href="#documentation">Documentation</a>
@@ -24,7 +125,8 @@
         </p>
       </div>
       <div class="cards-container">
-        <div class="card" style="flex: 1 1 100%">
+        <!-- Files Card -->
+        <div class="card">
           <div class="icon">
             <img src="./static/folder.png" alt="Files" />
             <h3>Files</h3>
@@ -37,18 +139,23 @@
             <button class="button" id="filesCard">Explore</button>
           </div>
         </div>
-        <div class="card" style="flex: 1 1 100%">
+
+        <!-- Email Search Card -->
+        <div class="card">
           <div class="icon">
             <img src="./static/profile.png" alt="Search" />
             <h3>Email Search</h3>
           </div>
           <div class="content">
             <p>
-              Search and analyze emails for comprehensive digital investigations.
+              Search and analyze emails for comprehensive digital
+              investigations.
             </p>
             <button class="button" id="emailSearchCard">Search</button>
           </div>
         </div>
+
+        <!-- WhatsApp Card -->
         <div class="card">
           <div class="icon">
             <img
@@ -60,12 +167,13 @@
           <div class="content">
             <p>
               Efficiently capture and document chats, call logs, and media from
-              WhatsApp accounts. Ensure accurate and secure extraction for
-              forensic analysis.
+              WhatsApp accounts.
             </p>
             <button class="button whatsapp" id="whatsappCard">Connect</button>
           </div>
         </div>
+
+        <!-- Instagram Card -->
         <div class="card">
           <div class="icon">
             <img src="./static/instagram.png" alt="Instagram" />
@@ -74,11 +182,13 @@
           <div class="content">
             <p>
               Access and analyze Instagram profiles, posts, stories, and direct
-              messages. Extract valuable data for social media investigations.
+              messages.
             </p>
             <button class="button instagram" id="instagramCard">Connect</button>
           </div>
         </div>
+
+        <!-- Facebook Card -->
         <div class="card">
           <div class="icon">
             <img src="./static/facebook.png" alt="Facebook" />
@@ -87,12 +197,13 @@
           <div class="content">
             <p>
               Retrieve and examine Facebook profiles, timelines, friend lists,
-              and group activities. Gather crucial information for comprehensive
-              social media analysis.
+              and group activities.
             </p>
             <button class="button facebook" id="facebookCard">Connect</button>
           </div>
         </div>
+
+        <!-- Twitter Card -->
         <div class="card">
           <div class="icon">
             <img src="./static/twitter.png" alt="Twitter" />
@@ -101,13 +212,14 @@
           <div class="content">
             <p>
               Collect and analyze tweets, retweets, likes, and follower
-              networks. Extract valuable data for social media trend analysis
-              and user profiling.
+              networks.
             </p>
             <button class="button twitter" id="twitterCard">Connect</button>
           </div>
         </div>
-        <div class="card narrow">
+
+        <!-- Google Card -->
+        <div class="card">
           <div class="icon">
             <img src="./static/google.png" alt="Google" />
             <h3>Google</h3>
@@ -115,12 +227,13 @@
           <div class="content">
             <p>
               Access Google services like Gmail, Google Drive, and Google
-              Photos. Gather and analyze user data for comprehensive digital
-              investigations.
+              Photos.
             </p>
             <button class="button google" id="googleCard">Connect</button>
           </div>
         </div>
+
+        <!-- Telegram Card -->
         <div class="card">
           <div class="icon">
             <img src="./static/telegram.png" alt="Telegram" />
@@ -128,9 +241,7 @@
           </div>
           <div class="content">
             <p>
-              Access Telegram services like posts,searches,and screenshots.
-              Gathers and analyses user data for comprehensive digital
-              investigations
+              Access Telegram services like posts, searches, and screenshots.
             </p>
             <button class="button telegram" id="telegramCard">Connect</button>
           </div>
@@ -142,9 +253,11 @@
       document.getElementById("filesCard").addEventListener("click", () => {
         window.location.href = "files.html"; // Redirect to the files page
       });
-      document.getElementById("emailSearchCard").addEventListener("click", () => {
-        window.location.href = "email_search.html"; // Redirect to the email search page
-      });
+      document
+        .getElementById("emailSearchCard")
+        .addEventListener("click", () => {
+          window.location.href = "email_search.html"; // Redirect to the email search page
+        });
       document.getElementById("whatsappCard").addEventListener("click", () => {
         window.location.href = "whatsapp.html";
       });
@@ -159,6 +272,10 @@
 
       document.getElementById("twitterCard").addEventListener("click", () => {
         window.location.href = "twitter.html";
+      });
+
+      document.getElementById("telegramCard").addEventListener("click", () => {
+        window.location.href = "telegram.html";
       });
 
       document.getElementById("googleCard").addEventListener("click", () => {

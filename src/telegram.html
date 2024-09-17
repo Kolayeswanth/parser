@@ -1,38 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Telegram Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css" />
     <link rel="stylesheet" href="./css/telegram.css" />
 </head>
 <body>
-    <header class="header">
-        <h1>Social Media Parser</h1>
-        <div class="header-links">
-          <a href="#tools">Tools</a>
-          <a href="#documentation">Documentation</a>
-          <a href="#help">Help</a>
-        </div>
-      </header>
-    <h1>Telegram Bot</h1>
-    
-
-    <div class="login-form">
+  <header class="header">
+    <h1>Social Media Parser</h1>
+    <div class="header-links">
+      <a href="#tools">Tools</a>
+      <a href="#documentation">Documentation</a>
+      <a href="#help">Help</a>
+    </div>
+  </header>
+  <div id="container">
+    <div class="card">
+      <a href="./home.html" class="back-arrow">
+        <i class="fas fa-arrow-left"></i>
+      </a>
+      <h1>Telegram Bot</h1>
+      <div class="login-form">
         <h2>Telegram Login</h2>
         <button onclick="startTelegramBot()">Start Telegram Bot</button>
-    </div>
+      </div>
 
-    <div id="qrCodeContainer" style="display: none;">
+      <div id="qrCodeContainer" style="display: none;">
         <h3>Scan QR Code</h3>
-        <img id="qrCodeImage" src="" alt="QR Code">
+        <img id="qrCodeImage" src="" alt="QR Code" />
         <button onclick="hideQRCode()">Hide QR Code</button>
+      </div>
+      <div id="logs"></div>
+
+      <div id="screenshotsContainer" style="display: none;">
+        <h3>Telegram Screenshots</h3>
+        <div id="screenshots"></div>
+      </div>
     </div>
+  </div>
 
-    <div id="logs"></div>
+  <script>
+    async function startTelegramBot() {
+      try {
+        const response = await window.electronAPI.startTelegramBot();
+        if (response.success) {
+          document.getElementById("qrCodeContainer").style.display = "block";
+          document.getElementById("qrCodeImage").src = response.qrCodePath;
+        } else {
+          throw new Error(response.error || 'Failed to start Telegram bot');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Failed to start Telegram bot. Please try again.');
+      }
+    }
 
-    <script>
-       
-    </script>
+    function hideQRCode() {
+      document.getElementById("qrCodeContainer").style.display = "none";
+      window.electronAPI.qrCodeScanned();
+    }
 
-    <script src="telegramBot.js"></script>
+    window.electronAPI.onUpdateLogs((message) => {
+      const logsDiv = document.getElementById("logs");
+      const logElement = document.createElement("p");
+      logElement.innerText = message;
+      logsDiv.appendChild(logElement);
+      logsDiv.scrollTop = logsDiv.scrollHeight;
+
+      if (message.includes("Screenshot saved:")) {
+        updateScreenshots();
+      }
+    });
+
+    window.electronAPI.onShowQRCode((qrCodePath) => {
+      document.getElementById("qrCodeContainer").style.display = "block";
+      document.getElementById("qrCodeImage").src = qrCodePath;
+    });
+
+  </script>
 </body>
 </html>
