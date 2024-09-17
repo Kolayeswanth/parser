@@ -16,6 +16,8 @@ body {
     min-height: 100vh;
     display: flex;
     flex-direction: column;
+    justify-content: center; /* Centers horizontally */
+    align-items: center;  
 }
 
 /* Header Styles */
@@ -46,7 +48,6 @@ body {
     color: white;
     font-weight: bold;
 }
-
 /* Main Content Styles */
 .main-content {
     flex: 1;
@@ -64,6 +65,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     width: 100%;
     max-width: 400px;
+    text-align: center;
 }
 
 #container h1 {
