@@ -1,13 +1,14 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
+const fs = require("fs").promises;
+
 const InstagramBot = require("./src/bots/instagramBot");
 const FacebookBot = require("./src/bots/facebookBot");
 const TwitterBot = require("./src/bots/twitterBot");
 const WhatsAppBot = require("./src/bots/whatsappBot");
 const TelegramBot = require("./src/bots/telegramBot");
+const EmailBot = require("./src/bots/emailBot"); // Corrected line
 const { supabase } = require('./supabaseClient');
-const fs = require("fs").promises;
-const EmailBot = require("./src/bots/emailBot"); // Change this line
 
 let mainWindow;
 let userEmail;
@@ -70,30 +71,21 @@ ipcMain.handle("start-email-search", async (_event, { email }) => {
   }
 });
 
-ipcMain.handle(
-  "start-instagram-bot",
-  async (_event, { username, password }) => {
-    const sendLog = (message) => {
-      mainWindow.webContents.send("update-logs", message);
-    };
+ipcMain.handle("start-instagram-bot", async (_event, { username, password }) => {
+  const sendLog = (message) => {
+    mainWindow.webContents.send("update-logs", message);
+  };
 
-    try {
-      const bot = new InstagramBot(
-        username,
-        password,
-        sendLog,
-        waitForTwoFactorCodei,
-        userEmail
-      );
-      await bot.run();
-      return { success: true };
-    } catch (error) {
-      sendLog(`Error: ${error.message}`);
-      console.error("Error occurred in Instagram bot:", error);
-      return { success: false, error: error.message };
-    }
+  try {
+    const bot = new InstagramBot(username, password, sendLog, waitForTwoFactorCodei, userEmail);
+    await bot.run();
+    return { success: true };
+  } catch (error) {
+    sendLog(`Error: ${error.message}`);
+    console.error("Error occurred in Instagram bot:", error);
+    return { success: false, error: error.message };
   }
-);
+});
 
 ipcMain.handle("start-facebook-bot", async (_event, { username, password }) => {
   const sendLog = (message) => {
@@ -101,12 +93,7 @@ ipcMain.handle("start-facebook-bot", async (_event, { username, password }) => {
   };
 
   try {
-    const bot = new FacebookBot(
-      username,
-      password,
-      sendLog,
-      waitForTwoFactorCode
-    );
+    const bot = new FacebookBot(username, password, sendLog, waitForTwoFactorCode);
     await bot.run();
     return { success: true };
   } catch (error) {
@@ -122,12 +109,7 @@ ipcMain.handle("start-twitter-bot", async (_event, { username, password }) => {
   };
 
   try {
-    const bot = new TwitterBot(
-      username,
-      password,
-      sendLog,
-      waitForVerificationInput
-    );
+    const bot = new TwitterBot(username, password, sendLog, waitForVerificationInput);
     await bot.run();
     return { success: true };
   } catch (error) {
@@ -191,9 +173,24 @@ ipcMain.handle("start-telegram-bot", async () => {
   }
 });
 
+ipcMain.handle("start-google-bot", async (_event, { username, password }) => {
+  const sendLog = (message) => {
+    mainWindow.webContents.send("update-logs", message);
+  };
+
+  try {
+    const bot = new GoogleBot(username, password, sendLog);
+    await bot.run();
+    return { success: true };
+  } catch (error) {
+    sendLog(`Error: ${error.message}`);
+    console.error("Error occurred in Google bot:", error);
+    return { success: false, error: error.message };
+  }
+});
+
 ipcMain.handle('login-user', async (_event, { email, password }) => {
   try {
-    // First, query the users table to get the user with the provided email
     const { data: users, error: queryError } = await supabase
       .from('users')
       .select('*')
@@ -208,12 +205,10 @@ ipcMain.handle('login-user', async (_event, { email, password }) => {
       throw new Error('User not found');
     }
 
-    // Check if the provided password matches the stored password
     if (users.password !== password) {
       throw new Error('Invalid credentials');
     }
     
-    // If login is successful, create user folder and store email
     userEmail = email;
     await createUserFolder(email);
     
@@ -286,56 +281,35 @@ ipcMain.handle('open-image', async (event, imagePath) => {
 
     console.log('Attempting to open image:', fullPath);
 
-    // Check if the file exists
     await fs.access(fullPath);
 
     const imageWindow = new BrowserWindow({
       width: 800,
       height: 600,
       webPreferences: {
-        nodeIntegration: false,
-        contextIsolation: true,
-      }
+        nodeIntegration: true,
+        contextIsolation: false,
+      },
     });
 
-    await imageWindow.loadFile(fullPath);
-
-    return { success: true };
+    imageWindow.loadURL(`file://${fullPath}`);
   } catch (error) {
     console.error('Error opening image:', error);
-    return { error: error.message };
-  }
-});
-
-ipcMain.handle('explore-directory', async (event, directoryPath) => {
-  try {
-    return await exploreDirectory(directoryPath);
-  } catch (error) {
-    console.error('Error exploring directory:', error);
-    return { error: error.message };
   }
 });
 
 app.whenReady().then(() => {
   createWindow();
 
-  app.on("activate", () => {
+  app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
 });
 
-app.on("window-all-closed", () => {
-  if (process.platform !== "darwin") {
+app.on('window-all-closed', () => {
+  if (process.platform !== 'darwin') {
     app.quit();
   }
-});
-
-app.on("quit", () => {
-  // Handle app quit event
-});
-
-ipcMain.on("quit-app", () => {
-  app.quit();
 });

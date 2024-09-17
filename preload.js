@@ -10,13 +10,10 @@ window.electronAPI = {
   checkLoginStatus: () => ipcRenderer.invoke('check-login-status'),
   loginUser: (email, password) => ipcRenderer.invoke('login-user', { email, password }),
   getUserFiles: () => ipcRenderer.invoke('get-user-files'),
-  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args), // Directly added invoke function
-  onUpdateLogs: (callback) => ipcRenderer.on('update-logs', (event, message) => callback(message)),
+  invoke: (channel, ...args) => ipcRenderer.invoke(channel, ...args),
   onShowQRCode: (callback) => ipcRenderer.on('show-qr-code', (event, qrCodePath) => callback(qrCodePath)),
   qrCodeScanned: () => ipcRenderer.send('qr-code-scanned'),
   getQRCode: () => ipcRenderer.invoke('start-whatsapp-bot'),
   startTelegramBot: () => ipcRenderer.invoke('start-telegram-bot'),
   waitForLogin: () => ipcRenderer.invoke('wait-for-login'),
-
 };
-

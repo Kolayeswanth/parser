@@ -1,7 +1,7 @@
 const { ipcRenderer } = require('electron');
 const puppeteer = require('puppeteer');
+const path = require('path');
 
-const loginForm = document.getElementById('login-form');
 const loginButton = document.getElementById('login-button');
 const screenshotContainer = document.getElementById('screenshot-container');
 
@@ -19,27 +19,38 @@ loginButton.addEventListener('click', async () => {
   const page = await browser.newPage();
 
   // Navigate to the Google login page
-  await page.goto('https://accounts.google.com/signin');
+  await page.goto('https://accounts.google.com/signin', { waitUntil: 'networkidle2' });
 
-  // Enter the email and password
+  // Enter the email
   await page.type('input[type="email"]', email);
-  await page.type('input[type="password"]', password);
-
-  // Click the login button
   await page.click('button[type="submit"]');
+  
+  // Wait for the password field to appear and be interactable
+  await page.waitForSelector('input[type="password"]', { visible: true });
 
-  // Wait for the page to load
-  await page.waitForNavigation();
+  // Enter the password
+  await page.type('input[type="password"]', password);
+  await page.click('button[type="submit"]');
+  
+  // Wait for navigation after login
+  await page.waitForNavigation({ waitUntil: 'networkidle2' });
 
-  // Take a screenshot of the user's history
-  const screenshot = await page.screenshot({
-    path: 'screenshot.png',
+  // Define the screenshot path
+  const fileName = 'screenshot'; // Modify this as needed
+  const screenshotPath = path.join('files', 'google', fileName + '.png');
+
+  // Take a screenshot of the page
+  await page.screenshot({
+    path: screenshotPath,
     type: 'png',
   });
 
+  // Notify the main process about the screenshot path
+  ipcRenderer.send('screenshot-saved', screenshotPath);
+
   // Display the screenshot in the container
   const screenshotImage = document.createElement('img');
-  screenshotImage.src = 'screenshot.png';
+  screenshotImage.src = screenshotPath;
   screenshotContainer.appendChild(screenshotImage);
 
   // Close the browser instance
