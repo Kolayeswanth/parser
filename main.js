@@ -136,28 +136,48 @@ ipcMain.handle("start-twitter-bot", async (_event, { username, password }) => {
     return { success: false, error: error.message };
   }
 });
-
 function waitForQRScan(qrCodeDataUrl) {
   return new Promise((resolve) => {
-    mainWindow.webContents.send("show-qr-code", qrCodeDataUrl);
-    ipcMain.once("qr-code-scanned", () => {
+    mainWindow.webContents.send('show-qr-code', qrCodeDataUrl);
+    ipcMain.once('qr-code-scanned', () => {
       resolve();
     });
   });
 }
 
-ipcMain.handle("start-whatsapp-bot", async () => {
+ipcMain.handle('start-whatsapp-bot', async () => {
   const sendLog = (message) => {
-    mainWindow.webContents.send("update-logs", message);
+      mainWindow.webContents.send('update-logs', message);
   };
 
   try {
-    const bot = new WhatsAppBot(sendLog, waitForQRScan);
-    await bot.run();
+      // Ensure userEmail is set and passed to WhatsAppBot
+      if (!userEmail) {
+          throw new Error('User email is not set.');
+      }
+
+      whatsAppBot = new WhatsAppBot(sendLog, waitForQRScan, userEmail);
+      await whatsAppBot.run();
+
+      // Get top 10 conversations and send them to the frontend
+      const conversations = await whatsAppBot.getTopConversations(10);
+      mainWindow.webContents.send('show-conversations-modal', conversations);
+
+      return { success: true };
+  } catch (error) {
+      sendLog(`Error: ${error.message}`);
+      console.error('Error occurred in WhatsApp bot:', error);
+      return { success: false, error: error.message };
+  }
+});
+
+
+ipcMain.handle('take-screenshots', async (_event, conversations) => {
+  try {
+    await whatsAppBot.takeScreenshots(conversations);
     return { success: true };
   } catch (error) {
-    sendLog(`Error: ${error.message}`);
-    console.error("Error occurred in WhatsApp bot:", error);
+    console.error('Error taking screenshots:', error);
     return { success: false, error: error.message };
   }
 });
@@ -267,7 +287,7 @@ async function exploreDirectory(directoryPath) {
   };
 }
 
-ipcMain.handle('open-image', async (event, imagePath) => {
+ipcMain.handle('open-image', async (_event, imagePath) => {
   try {
     const baseDir = path.join(process.cwd(), 'files', userEmail);
     const fullPath = path.join(baseDir, imagePath);
@@ -295,7 +315,7 @@ ipcMain.handle('open-image', async (event, imagePath) => {
   }
 });
 
-ipcMain.handle('explore-directory', async (event, directoryPath) => {
+ipcMain.handle('explore-directory', async (_event, directoryPath) => {
   try {
     return await exploreDirectory(directoryPath);
   } catch (error) {
