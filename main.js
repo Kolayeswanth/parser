@@ -11,6 +11,7 @@ const  EmailBot  = require("./src/bots/emailBot"); // Change this line
 
 let mainWindow;
 let userEmail;
+let whatsAppBot;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -151,16 +152,14 @@ ipcMain.handle('start-whatsapp-bot', async () => {
   };
 
   try {
-      // Ensure userEmail is set and passed to WhatsAppBot
       if (!userEmail) {
           throw new Error('User email is not set.');
       }
 
       whatsAppBot = new WhatsAppBot(sendLog, waitForQRScan, userEmail);
-      await whatsAppBot.run();
+      const conversations = await whatsAppBot.run();
 
-      // Get top 10 conversations and send them to the frontend
-      const conversations = await whatsAppBot.getTopConversations(10);
+      // Send conversations to the frontend
       mainWindow.webContents.send('show-conversations-modal', conversations);
 
       return { success: true };
@@ -171,7 +170,6 @@ ipcMain.handle('start-whatsapp-bot', async () => {
   }
 });
 
-
 ipcMain.handle('take-screenshots', async (_event, conversations) => {
   try {
     await whatsAppBot.takeScreenshots(conversations);
@@ -179,6 +177,8 @@ ipcMain.handle('take-screenshots', async (_event, conversations) => {
   } catch (error) {
     console.error('Error taking screenshots:', error);
     return { success: false, error: error.message };
+  } finally {
+    await whatsAppBot.close();
   }
 });
 
@@ -266,7 +266,6 @@ async function exploreDirectory(directoryPath) {
   const baseDir = path.join(process.cwd(), 'files', userEmail);
   const fullPath = path.join(baseDir, directoryPath);
 
-  console.log('Exploring directory:', fullPath);
 
   const files = await fs.readdir(fullPath);
 
@@ -292,7 +291,6 @@ ipcMain.handle('open-image', async (_event, imagePath) => {
     const baseDir = path.join(process.cwd(), 'files', userEmail);
     const fullPath = path.join(baseDir, imagePath);
 
-    console.log('Attempting to open image:', fullPath);
 
     // Check if the file exists
     await fs.access(fullPath);
@@ -319,7 +317,6 @@ ipcMain.handle('explore-directory', async (_event, directoryPath) => {
   try {
     return await exploreDirectory(directoryPath);
   } catch (error) {
-    console.error('Error exploring directory:', error);
     return { error: error.message };
   }
 });
