@@ -3,59 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>User Files</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-color: #f0f0f0;
-        }
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        .file-explorer {
-            background-color: white;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            padding: 10px;
-        }
-        .file-item {
-            display: flex;
-            align-items: center;
-            cursor: pointer;
-            padding: 5px;
-            margin: 2px 0;
-        }
-        .file-item:hover {
-            background-color: #f0f0f0;
-        }
-        .icon {
-            display: inline-block;
-            width: 20px;
-            text-align: center;
-            margin-right: 5px;
-        }
-        .folder-contents {
-            margin-left: 20px;
-        }
-        .current-path {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: #555;
-        }
-    </style>
+    <title>Social Media Parser</title>
+    <link rel="stylesheet" href="./css/files.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
+
+
 </head>
 <body>
-    <div class="header">
-        <h1>User Files</h1>
-        <button onclick="location.href='home.html'">Back to Home</button>
+    <header class="header">
+        <h1>Social Media Parser</h1>
+        <nav class="header-links">
+            <a href="#tools">Tools</a>
+            <a href="#documentation">Documentation</a>
+            <a href="#help">Help</a>
+        </nav>
+    </header>
+       
+    <div class="container">
+        <header class="sub-header">
+            <h3>User Files</h3>
+            <button class="btn btn-primary" onclick="location.href='home.html'">Back to Home</button>
+        </header>   
+        <nav id="currentPath" class="breadcrumb"></nav>
+        
+        <main id="fileExplorer" class="file-explorer"></main>
+        <script src="./scripts/files.js"></script>
     </div>
-    <div id="currentPath" class="current-path"></div>
-    <div id="fileExplorer" class="file-explorer"></div>
-    <script src="./scripts/files.js"></script>
+  
+        <!-- Buttons for Download, Print, and Crop -->
+        <div class="screenshot-controls">
+            <button onclick="downloadScreenshot()">Download Screenshot</button>
+            <button onclick="printScreenshot()">Print Screenshot</button>
+            <button onclick="cropScreenshot()">Crop Screenshot</button>
+        </div>
+
+        <canvas id="screenshotCanvas" style="display:none;"></canvas>
+        <img id="croppedImage" style="display:none;" />
+
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+        <script src="./scripts/files.js"></script>
+        <script>
+            // Function to capture and download a screenshot
+            function downloadScreenshot() {
+                html2canvas(document.body).then(canvas => {
+                    const link = document.createElement('a');
+                    link.download = 'screenshot.png';
+                    link.href = canvas.toDataURL();
+                    link.click();
+                });
+            }
+
+            // Function to print the current page/screenshot
+            function printScreenshot() {
+                html2canvas(document.body).then(canvas => {
+                    const printWindow = window.open('', '_blank');
+                    printWindow.document.write('<img src="' + canvas.toDataURL() + '" />');
+                    printWindow.document.close();
+                    printWindow.focus();
+                    printWindow.print();
+                    printWindow.close();
+                });
+            }
+
+            // Function to crop a screenshot
+            function cropScreenshot() {
+                html2canvas(document.body).then(canvas => {
+                    document.getElementById('screenshotCanvas').style.display = 'block';
+                    const context = document.getElementById('screenshotCanvas').getContext('2d');
+                    context.drawImage(canvas, 0, 0);
+
+                    // Initialize cropper
+                    const cropper = new Cropper(document.getElementById('screenshotCanvas'), {
+                        aspectRatio: 16 / 9,
+                        crop(event) {
+                            const canvasData = cropper.getCroppedCanvas();
+                            document.getElementById('croppedImage').src = canvasData.toDataURL();
+                            document.getElementById('croppedImage').style.display = 'block';
+                        }
+                    });
+                });
+            }
+        </script>
+
+
 </body>
 </html>
