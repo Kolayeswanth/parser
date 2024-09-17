@@ -29,7 +29,6 @@ function handleItemClick(item) {
         fetchFiles(newPath);
     } else if (isImageFile(item.name)) {
         const imagePath = currentPath ? `${currentPath}/${item.name}` : item.name;
-        console.log('Attempting to open image:', imagePath);
         ipcRenderer.invoke('open-image', imagePath)
             .then(result => {
                 if (result.error) {

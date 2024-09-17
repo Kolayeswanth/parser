@@ -25,20 +25,10 @@ class WhatsAppBot {
             const conversations = await this.getTopConversations(10);
             this.sendLog('Fetched top conversations.');
     
-            // Send the list to the frontend
-            this.page.evaluate((conversations) => {
-                window.electronAPI.showConversationsModal(conversations);
-            }, conversations);
-    
+            return conversations;
         } catch (error) {
             this.sendLog(`Error: ${error.message}`);
             throw error;
-        }
-        finally {
-            if (this.browser) {
-                this.sendLog('Closing browser...');
-                await this.browser.close();
-            }
         }
     }
     async launch() {
@@ -73,12 +63,14 @@ class WhatsAppBot {
     async getTopConversations(limit = 10) {
         this.sendLog('Fetching top conversations...');
         const conversations = await this.page.evaluate((limit) => {
-            const chatElements = Array.from(document.querySelectorAll('div._ak8q div._aou8 span[title]'));
+            // Targeting the chat container div with class '_ak8q' and fetching the title spans
+            const chatElements = Array.from(document.querySelectorAll('div._ak8q span[title]'));
             return chatElements.slice(0, limit).map(chat => chat.innerText || 'Unknown');
         }, limit);
         this.sendLog('Conversations fetched successfully.');
         return conversations;
     }
+    
     
 
     async takeScreenshots(conversations) {
@@ -88,6 +80,13 @@ class WhatsAppBot {
             await this.takeFullPageScreenshot(conversation);
         }
         this.sendLog('Screenshots taken successfully.');
+    }
+
+    async close() {
+        if (this.browser) {
+            this.sendLog('Closing browser...');
+            await this.browser.close();
+        }
     }
     
     async searchConversation(conversationName) {
