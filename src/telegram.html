@@ -1,38 +1,53 @@
 <!DOCTYPE html>
-<html>
-<head>
-    <title>Telegram Bot</title>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Telegram Login</title>
     <link rel="stylesheet" href="./css/telegram.css" />
-</head>
-<body>
+  </head>
+  <body>
     <header class="header">
-        <h1>Social Media Parser</h1>
-        <div class="header-links">
-          <a href="#tools">Tools</a>
-          <a href="#documentation">Documentation</a>
-          <a href="#help">Help</a>
-        </div>
-      </header>
-    <h1>Telegram Bot</h1>
-    
+      <h1>Social Media Parser</h1>
+      <div class="header-links">
+        <a href="#tools">Tools</a>
+        <a href="#documentation">Documentation</a>
+        <a href="#help">Help</a>
+      </div>
+    </header>
 
-    <div class="login-form">
-        <h2>Telegram Login</h2>
-        <button onclick="startTelegramBot()">Start Telegram Bot</button>
+    <div id="container">
+      <div class="card">
+        <h1>
+          <span id="backArrow" style="cursor: pointer;">&#8592;</span> Telegram Login
+        </h1>
+        <button id="loginWithQR">Login with QR Code</button>
+        <div id="logs"></div>
+      </div>
+    </div>
+    <div id="resultPopup"></div>
+    <div id="conversationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Select Conversations</h2>
+        <input type="checkbox" id="selectAll" /> Select All
+        <hr />
+        <br />
+        <div id="conversationList"></div>
+        <button id="takeScreenshots">Take Screenshots</button>
+      </div>
     </div>
 
-    <div id="qrCodeContainer" style="display: none;">
-        <h3>Scan QR Code</h3>
-        <img id="qrCodeImage" src="" alt="QR Code">
-        <button onclick="hideQRCode()">Hide QR Code</button>
+    <div id="qrModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Scan QR Code</h2>
+        <img id="qrCode" alt="QR Code" />
+        <br />
+        <button id="confirmQRScan">Confirm QR Code Scanned</button>
+      </div>
     </div>
 
-    <div id="logs"></div>
-
-    <script>
-       
-    </script>
-
-    <script src="telegramBot.js"></script>
-</body>
+    <script src="./scripts/telegram.js"></script>
+  </body>
 </html>

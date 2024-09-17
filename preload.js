@@ -16,5 +16,6 @@ window.electronAPI = {
   onShowConversationsModal: (callback) => ipcRenderer.on('show-conversations-modal', (event, conversations) => callback(conversations)),
   confirmQRCodeScanned: () => ipcRenderer.send('qr-code-scanned'),
   onShowQRCode: (callback) => ipcRenderer.on('show-qr-code', (event, qrCodeDataUrl) => callback(qrCodeDataUrl)),
-
+  startTelegramBot: () => ipcRenderer.invoke('start-telegram-bot'),
+  takeTelegramScreenshots: (conversations) => ipcRenderer.invoke('take-telegram-screenshots', conversations),
 };

@@ -12,6 +12,7 @@ const  EmailBot  = require("./src/bots/emailBot"); // Change this line
 let mainWindow;
 let userEmail;
 let whatsAppBot;
+let telegramBot;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
@@ -181,20 +182,38 @@ ipcMain.handle('take-screenshots', async (_event, conversations) => {
     await whatsAppBot.close();
   }
 });
-
-ipcMain.handle("start-telegram-bot", async (_event, { phoneNumber, password }) => {
+ipcMain.handle('start-telegram-bot', async () => {
   const sendLog = (message) => {
-    mainWindow.webContents.send("update-logs", message);
+    mainWindow.webContents.send('update-logs', message);
   };
 
   try {
-    const bot = new TelegramBot(sendLog, waitForQRScan);
-    await bot.run();
+    if (!userEmail) {
+      throw new Error('User email is not set.');
+    }
+
+    telegramBot = new TelegramBot(sendLog, waitForQRScan, userEmail);
+    const conversations = await telegramBot.run();
+
+    mainWindow.webContents.send('show-conversations-modal', conversations);
+
     return { success: true };
   } catch (error) {
     sendLog(`Error: ${error.message}`);
-    console.error("Error occurred in Telegram bot:", error);
     return { success: false, error: error.message };
+  }
+});
+
+
+ipcMain.handle('take-telegram-screenshots', async (_event, conversations) => {
+  try {
+    await telegramBot.takeScreenshots(conversations);
+    return { success: true };
+  } catch (error) {
+    console.error('Error taking screenshots:', error);
+    return { success: false, error: error.message };
+  } finally {
+    await telegramBot.close();
   }
 });
 
