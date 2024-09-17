@@ -1,55 +1,54 @@
-\<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WhatsApp Login</title>
-    <style>
-      
-    </style>
-</head>
-<body>
+    
+    <link rel="stylesheet" href="./css/whatsapp.css" />
+  </head>
+  <body>
     <header class="header">
-        <h1>Social Media Parser</h1>
-        <div class="header-links">
-          <a href="#tools">Tools</a>
-          <a href="#documentation">Documentation</a>
-          <a href="#help">Help</a>
-        </div>
-      </header>
-    <h1>WhatsApp Login</h1>
-    <div>
+      <h1>Social Media Parser</h1>
+      <div class="header-links">
+        <a href="#tools">Tools</a>
+        <a href="#documentation">Documentation</a>
+        <a href="#help">Help</a>
+      </div>
+    </header>
+
+    <div id="container">
+      <div class="card">
+        <h1>
+          <span id="backArrow" style="cursor: pointer;">&#8592;</span> WhatsApp Login
+        </h1>
         <button id="loginWithQR">Login with QR Code</button>
-        <button id="loginWithPhone">Login with Phone Number</button>
+        <div id="logs"></div>
+      </div>
+    </div>
+    <div id="resultPopup"></div>
+    <div id="conversationModal" class="modal">
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Select Conversations</h2>
+        <input type="checkbox" id="selectAll" /> Select All
+        <hr>
+        <br>
+        <div id="conversationList"></div>
+        <button id="takeScreenshots">Take Screenshots</button>
+      </div>
     </div>
 
     <div id="qrModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Scan QR Code</h2>
-            <img id="qrCode" src="" alt="QR Code">
-        </div>
+      <div class="modal-content">
+        <span class="close">&times;</span>
+        <h2>Scan QR Code</h2>
+        <img id="qrCode" alt="QR Code" />
+        <br>
+        <button id="confirmQRScan">Confirm QR Code Scanned</button>
+      </div>
     </div>
 
-    <div id="phoneModal" class="modal">
-        <div class="modal-content">
-            <span class="close">&times;</span>
-            <h2>Login with Phone Number</h2>
-            <form id="phoneForm">
-                <label for="countryCode">Country Code:</label>
-                <input type="text" id="countryCode" name="countryCode" required><br><br>
-                <label for="phoneNumber">Phone Number:</label>
-                <input type="text" id="phoneNumber" name="phoneNumber" required><br><br>
-                <button type="submit">Submit</button>
-            </form>
-        </div>
-    </div>
-
-    <div id="result"></div>
-    <div id="logs"></div>
-
-    <script>
-       
-    </script>
-</body>
+    <script src="./scripts/whatsapp.js"></script>
+  </body>
 </html>
