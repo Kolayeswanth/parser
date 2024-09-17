@@ -6,31 +6,32 @@ body {
     min-height: 100vh;
   }
 
+
   .header {
-    background: linear-gradient(79.8deg, rgb(101, 132, 154) 3.2%, rgb(160, 197, 201) 89.1%);
+    background: radial-gradient(circle at -8.9% 51.2%, rgb(255, 124, 0) 0%, rgb(255, 124, 0) 15.9%, rgb(255, 163, 77) 15.9%, rgb(255, 163, 77) 24.4%, rgb(19, 30, 37) 24.5%, rgb(19, 30, 37) 66%);
     padding: 20px 60px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     box-shadow: 0 2px 5px rgba(97, 129, 199, 0.1);
-  }
+}
 
-  .header h1 {
+.header h1 {
     margin: 0;
     font-size: 1.5em;
-    color: #10183a;
-  }
+    color: white;
+}
 
-  .header-links {
+.header-links {
     display: flex;
     gap: 20px;
-  }
+}
 
-  .header-links a {
+.header-links a {
     text-decoration: none;
-    color: #4e4dac;
+    color: white;
     font-weight: bold;
-  }
+}
     #logs {
         border: 1px solid #ccc;
         padding: 10px;

@@ -1,39 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Twitter Bot</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Capriola:wght@400;700&display=swap">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <style>
-       
-    </style>
-</head>
-<body>
-    <a href="./home.html" class="back-arrow"><i class="fas fa-arrow-left"></i></a> <!-- Font Awesome arrow icon -->
-    <div id="container">
-        <h1>Twitter Bot</h1>
-        <form id="loginForm">
-            <div>
-                <input type="text" id="username" name="username" required placeholder=" " />
-                <label for="username">Username</label>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Twitter Bot</title>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Capriola:wght@400;700&display=swap">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">  
+        <link rel="stylesheet" href="./css/twitter.css" />
+    </head>    
+    </head>
+    <body>
+        <header class="header">
+            <h1>Social Media Parser</h1>
+            <div class="header-links">
+                <a href="#tools">Tools</a>
+                <a href="#documentation">Documentation</a>
+                <a href="#help">Help</a>
             </div>
-            <div>
-                <input type="password" id="password" name="password" required placeholder=" " />
-                <label for="password">Password</label>
+        </header>
+        <a href="./home.html" class="back-arrow"><i class="fas fa-arrow-left"></i></a>
+        <div class="main-content">
+            <div id="container">
+                <h1>Twitter Bot</h1>
+                <form id="loginForm">
+                    <div class="input-group">
+                        <input type="text" id="username" name="username" required placeholder=" " />
+                        <label for="username">Username</label>
+                    </div>
+                    <div class="input-group">
+                        <input type="password" id="password" name="password" required placeholder=" " />
+                        <label for="password">Password</label>
+                    </div>
+                    <button type="submit" id="submitBtn">Start Bot</button>
+                </form>
+                <div id="verification-prompt"></div>
+                <input type="text" id="verification-input" placeholder="Enter verification info" />
+                <button id="submit-verification">Submit Verification</button>
+                <div id="result"></div>
+                <div id="logs"></div>
             </div>
-            <button type="submit" id="submitBtn">Start Bot</button>
-        </form>
-        <div id="verification-prompt"></div>
-        <input type="text" id="verification-input" placeholder="Enter verification info" />
-        <button id="submit-verification">Submit Verification</button>
-        <div id="result"></div>
-        <div id="logs"></div>
-    </div>
-    <div id="empty-space">
-        <i class="fas fa-trash dustbin-icon"></i> <!-- Dustbin Symbol -->
-    </div>
-    <script src="./scripts/twitter.js"></script>
-</body>
-</html>
+        </div>
+        <a href="home.html" class="back-arrow" title="Back to Homepage">
+            <i class="fas fa-arrow-left"></i>
+        </a>
+        <div id="empty-space">
+            <i class="fas fa-trash dustbin-icon"></i>
+        </div>
+        <script src="./scripts/twitter.js"></script>
+    </body>
+    </html>
+    

@@ -1,172 +1,186 @@
 body {
-    font-family: Arial, Helvetica, sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-    min-height: 100vh;
-  }
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+}
+.header {
+  background: radial-gradient(circle at -8.9% 51.2%, rgb(255, 124, 0) 0%, rgb(255, 124, 0) 15.9%, rgb(255, 163, 77) 15.9%, rgb(255, 163, 77) 24.4%, rgb(19, 30, 37) 24.5%, rgb(19, 30, 37) 66%);
+  padding: 20px 60px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 2px 5px rgba(97, 129, 199, 0.1);
+  position: relative;
+  z-index: 10;
+}
 
+.header h1 {
+  margin: 0;
+  font-size: 2em;
+  color: white;
+}
+
+.header-links {
+  display: flex;
+  gap: 20px;
+}
+
+.header-links a {
+  text-decoration: none;
+  color: white;
+  font-weight: bold;
+}
+
+
+.header-links a:hover {
+  text-decoration: underline;
+}
+.container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 40px 20px;
+  box-sizing: border-box;
+}
+
+.content-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.content-header h2 {
+  font-size: 2.5em;
+  color: #333;
+  margin-bottom: 40px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.content-header p {
+  font-size: 1.1em;
+  color: #666;
+  max-width: 600px;
+  margin: 20px auto;
+}
+
+.cards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 15px;
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  padding: 25px;
+  flex: 1 1 calc(33.333% - 13.333px);
+  min-width: 300px;
+  box-sizing: border-box;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card.narrow {
+  flex: 1 1 calc(33.333% - 13.333px);
+}
+
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.icon img {
+  width: 40px;
+  height: 40px;
+  margin-right: 15px;
+  object-fit: contain;
+}
+
+.content h3 {
+  margin: 0 0 10px;
+  font-size: 1.4em;
+  color: #333;
+}
+
+.content p {
+  margin: 0 0 20px;
+  font-size: 0.9em;
+  color: #666;
+  line-height: 1.5;
+}
+
+.button {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 50px;
+  text-decoration: none;
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  letter-spacing: 1px;
+  transition: all 0.3s ease;
+  background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.whatsapp {
+  background: linear-gradient(45deg, #25d366 0%, #128c7e 100%);
+}
+.instagram {
+  background: linear-gradient(
+    45deg,
+    #405de6 0%,
+    #5851db 25%,
+    #833ab4 50%,
+    #c13584 75%,
+    #e1306c 100%
+  );
+}
+.facebook {
+  background: linear-gradient(45deg, #3b5998 0%, #4c70ba 100%);
+}
+.twitter {
+  background: linear-gradient(45deg, #1DA1F2 0%, #0077B5 100%);
+}
+.google {
+  background: linear-gradient(45deg, #4285F4 0%, #34A853 100%);
+}
+.telegram {
+  background: linear-gradient(45deg, #0088cc 0%, #1da1f2 100%);
+}
+
+@media (max-width: 768px) {
+  .card, .card.narrow { flex: 1 1 100%; }
   .header {
-    background: linear-gradient(79.8deg, rgb(101, 132, 154) 3.2%, rgb(160, 197, 201) 89.1%);
-    padding: 20px 60px;
-    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: center;
-    box-shadow: 0 2px 5px rgba(97, 129, 199, 0.1);
+    padding: 20px 60px;  
+    gap: 10px;
+    flex: 1 1 100%;  
   }
-
-  .header h1 {
-    margin: 0;
-    font-size: 1.5em;
-    color: #10278d;
+ .header h1 {
+  font-size: 1.8em; 
+  margin-bottom: 0;
   }
-
   .header-links {
-    display: flex;
-    gap: 20px;
+    flex-direction: column;
   }
-
-  .header-links a {
-    text-decoration: none;
-    color: #4e4dac;
-    font-weight: bold;
-  }
-
-  .container {
-    width: 100%;
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-    box-sizing: border-box;
-  }
-
-  .content-header {
-    text-align: left;
-    margin-bottom: 40px;
-  }
-
-  .content-header h2 {
-    font-size: 2.5em;
-    color: #333;
-    margin-bottom: 10px;
-  }
-
-  .content-header p {
-    font-size: 1.1em;
-    color: #666;
-    max-width: 600px;
-    margin: 0;
-  }
-
-  .cards-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-
-  .card {
-    background: rgba(255, 255, 255, 0.8);
-    border-radius: 15px;
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.18);
-    padding: 25px;
-    flex: 1 1 calc(50% - 10px);
-    min-width: 300px;
-    box-sizing: border-box;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .card.narrow {
-    flex: 1 1 calc(33.333% - 13.333px);
-  }
-
-  .card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 12px 40px rgba(31, 38, 135, 0.2);
-  }
-
-  .icon {
-    display: flex;
-    align-items: center;
-    margin-bottom: 15px;
-  }
-
-  .icon img {
-    width: 40px;
-    height: 40px;
-    margin-right: 15px;
-    object-fit: contain;
-  }
-
-  .content h3 {
-    margin: 0 0 10px;
-    font-size: 1.4em;
-    color: #333;
-  }
-
-  .content p {
-    margin: 0 0 20px;
-    font-size: 0.9em;
-    color: #666;
-    line-height: 1.5;
-  }
-
-  .button {
-    display: inline-block;
-    padding: 10px 20px;
-    border-radius: 50px;
-    text-decoration: none;
-    font-weight: bold;
-    text-transform: uppercase;
-    font-size: 0.8em;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    background: linear-gradient(45deg, #6a11cb 0%, #2575fc 100%);
-    color: white;
-    border: none;
-    cursor: pointer;
-  }
-
-  .button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-  }
-
-  .whatsapp {
-    background: linear-gradient(45deg, #25d366 0%, #128c7e 100%);
-  }
-  .instagram {
-    background: linear-gradient(
-      45deg,
-      #405de6 0%,
-      #5851db 25%,
-      #833ab4 50%,
-      #c13584 75%,
-      #e1306c 100%
-    );
-  }
-  .facebook {
-    background: linear-gradient(45deg, #3b5998 0%, #4c70ba 100%);
-  }
-  .twitter {
-    background: linear-gradient(45deg, #1DA1F2 0%, #0077B5 100%);
-  }
-  .google {
-    background: linear-gradient(45deg, #4285F4 0%, #34A853 100%);
-  }
-  .telegram {
-    background: linear-gradient(45deg, #0088cc 0%, #1da1f2 100%);
-  }
-
-  @media (max-width: 768px) {
-    .card, .card.narrow { flex: 1 1 100%; }
-    .header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 10px;
-    }
-    .header-links {
-      flex-direction: column;
-    }
-  }
+}
